@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Foto</title>
+</head>
+<body>
+    <h1>Subir una Foto</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <p>
+            {{ form.photo.label }}<br>
+            {{ form.photo }}
+        </p>
+        {% if form.photo.errors %}
+            {% for error in form.photo.errors %}
+                <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        {% endif %}
+        <p>
+            <input type="submit" value="Subir">
+        </p>
+    </form>
+</body>
+</html>
