@@ -1,28 +1,25 @@
 import os
-from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash
+from flask import Blueprint, jsonify, request, render_template, redirect, url_for, flash, current_app
 from .models import Usuario, Direccion, Telefono, ExperienciaLaboral
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import app
 from .forms import PhotoForm
 from werkzeug.utils import secure_filename
 
 main = Blueprint('main', __name__)
 
-UPLOAD_FOLDER = 'uploads'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-@app.route('/upload', methods=['GET', 'POST'])
+@main.route('/upload', methods=['GET', 'POST'])
 def upload_photo():
     form = PhotoForm()
     if form.validate_on_submit():
         f = form.photo.data
         filename = secure_filename(f.filename)
-        if not os.path.exists(app.config['UPLOAD_FOLDER']):
-            os.makedirs(app.config['UPLOAD_FOLDER'])
-        f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        upload_folder = current_app.config['UPLOAD_FOLDER']
+        if not os.path.exists(upload_folder):
+            os.makedirs(upload_folder)
+        f.save(os.path.join(upload_folder, filename))
         flash('Foto subida exitosamente', 'success')
-        return redirect(url_for('upload_photo'))
+        return redirect(url_for('main.upload_photo'))
     return render_template('upload.html', form=form)
 
 @main.route('/usuarios', methods=['GET'])

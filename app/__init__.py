@@ -11,6 +11,7 @@ csrf = CSRFProtect()
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.config['UPLOAD_FOLDER'] = 'uploads'  # Añade esta línea
 
     db.init_app(app)
     migrate.init_app(app, db)
