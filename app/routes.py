@@ -10,16 +10,24 @@ main = Blueprint('main', __name__)
 
 @main.route('/upload', methods=['GET', 'POST'])
 def upload_photo():
+    current_app.logger.debug("Iniciando upload_photo")
     form = PhotoForm()
     if form.validate_on_submit():
+        current_app.logger.debug("Formulario validado")
         f = form.photo.data
         filename = secure_filename(f.filename)
+        current_app.logger.debug(f"Nombre de archivo seguro: {filename}")
         upload_folder = current_app.config['UPLOAD_FOLDER']
         if not os.path.exists(upload_folder):
             os.makedirs(upload_folder)
-        f.save(os.path.join(upload_folder, filename))
+            current_app.logger.debug(f"Creado directorio: {upload_folder}")
+        file_path = os.path.join(upload_folder, filename)
+        current_app.logger.debug(f"Guardando archivo en: {file_path}")
+        f.save(file_path)
+        current_app.logger.debug("Archivo guardado")
         flash('Foto subida exitosamente', 'success')
         return redirect(url_for('main.upload_photo'))
+    current_app.logger.debug("Renderizando formulario")
     return render_template('upload.html', form=form)
 
 @main.route('/usuarios', methods=['GET'])
