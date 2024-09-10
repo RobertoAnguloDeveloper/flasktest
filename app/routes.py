@@ -19,7 +19,8 @@ def get_usuarios():
 @main.route('/users2')
 def users_table():
     users = Usuario.query.all()
-    return render_template('users_table.html', users=users)
+    direcciones = Direccion.query.all()
+    return render_template('users_table.html', users=users, direcciones=direcciones)
     
 @main.route('/usuarios/<int:id>', methods=['GET'])
 def get_usuario(id):
